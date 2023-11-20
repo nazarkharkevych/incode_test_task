@@ -1,4 +1,4 @@
-import { Box, Button, Pagination, PaginationItem, Stack, Fab, Icon } from '@mui/material';
+import { Box, Pagination, PaginationItem, Stack } from '@mui/material';
 import * as React from 'react';
 // import { useGetCharactersQuery } from '../../features/api/apiSlice';
 import Card from '../../components/Card/Card';
@@ -6,10 +6,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { loadCharacters } from '../../features/characters/charactersSlice';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DownloadIcon from '@mui/icons-material/Download';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
+import FabComponent from '../../components/Fab/FabComponent';
+import FilterBar from '../../components/Filter/Filter';
 
 const Main = () => {
   const itemsCount = 6;
@@ -25,7 +24,7 @@ const Main = () => {
     if (currentPage === 1 || currentPage === 3) {
       dispatch(loadCharacters({page: currentPage}))
     }
-  }, [currentPage])
+  }, [currentPage]);
 
   const itemsOnPage = React.useMemo(() => {
       return characters.slice(
@@ -46,19 +45,10 @@ const Main = () => {
         flexGrow: 1,
         padding: '40px 106px 16px'
       }}>
-      <Button variant="text" sx={{
-        borderRadius: '4px',
-        background: '#F5F5F5',
-        color: '#272B33',
-        padding: '16px 46px',
-        '&:hover': {
-          background: '#F5F5F5',
-        },
-      }}>
-        Filter
-      </Button>
+      <FilterBar />
 
       <Box sx={{
+        position: 'relative',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(600px, 1fr))',
         gap: '27px',
@@ -69,40 +59,16 @@ const Main = () => {
             <Card card={char} />
           </Link>
         ))}
+
+        <Box sx={{
+          position: 'absolute',
+          right: '0',
+          bottom: '10px',
+          transform: 'translateX(50%)'
+        }}>
+          <FabComponent />
+        </Box>
       </Box>
-
-      <Stack spacing="24px" sx={{
-        position: 'relative',
-        left: '100%',
-        maxWidth: '88px',
-        alignItems: 'center'
-      }}>
-        <Fab sx={{
-          width: '40px',
-          height: '40px',
-        }}>
-          <ErrorOutlineIcon />
-        </Fab>
-
-        <Fab sx={{
-          width: '40px',
-          height: '40px',
-        }}>
-          <DownloadIcon />
-        </Fab>
-
-        <Fab variant="circular">
-          <Icon sx={{
-            width: '24px',
-            height: '24px',
-            '& > img': {
-              verticalAlign: 'top'
-            }
-          }}>
-            <MoreVertIcon sx={{ verticalAlign: 'top' }} />
-          </Icon>
-        </Fab>
-      </Stack>
 
       <Stack spacing={2} sx={{
         alignItems: 'center'

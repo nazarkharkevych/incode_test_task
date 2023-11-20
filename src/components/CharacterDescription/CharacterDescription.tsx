@@ -36,63 +36,63 @@ const CharacterDescription = ({ card, margin }: Props) => {
       margin,
     }}>
       <Typography variant="h2" sx={{
-          color: '#F5F5F5',
-          fontSize: '27px',
-          fontStyle: 'normal',
-          fontWeight: 800,
-          lineHeight: '110%',
-        }}>
-          {card.name}
-        </Typography>
+        color: '#F5F5F5',
+        fontSize: '27px',
+        fontStyle: 'normal',
+        fontWeight: 800,
+        lineHeight: '110%',
+      }}>
+        {card.name}
+      </Typography>
 
+      <Typography sx={{
+        ...greyText,
+        color: '#FFF',
+        marginBottom: '12.5px',
+        '&::before': {
+          content: '""',
+          display: 'block',
+          marginRight: '7px',
+          marginTop: '10px',
+          width: '9px',
+          height: '9px',
+          borderRadius: '4.5px',
+          backgroundColor: `${statusColor[card.status]}`,
+          float: 'left',
+        }
+      }}>
+        {`${card.status} - ${card.species}`}
+      </Typography>
+
+      <Box sx={{
+        marginBottom: '13.5px',
+      }}>
+        <Typography sx={{
+          color: '#9E9E9E',
+          fontSize: '15px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: '173.333%',
+        }}>
+          Last known location:
+        </Typography>
+        <Typography sx={whiteText}>
+          {card.location.name}
+        </Typography>
+      </Box>
+
+      <Box>
         <Typography sx={{
           ...greyText,
-          color: '#FFF',
-          marginBottom: '12.5px',
-          '&::before': {
-            content: '""',
-            display: 'block',
-            marginRight: '7px',
-            marginTop: '10px',
-            width: '9px',
-            height: '9px',
-            borderRadius: '4.5px',
-            backgroundColor: `${statusColor[card.status]}`,
-            float: 'left',
-          }
+          color: '#9E9E9E',
         }}>
-          {`${card.status} - ${card.species}`}
+          First seen in:
         </Typography>
 
-        <Box sx={{
-          marginBottom: '13.5px',
-        }}>
-          <Typography sx={{
-            color: '#9E9E9E',
-            fontSize: '15px',
-            fontStyle: 'normal',
-            fontWeight: 500,
-            lineHeight: '173.333%',
-          }}>
-            Last known location:
-          </Typography>
-          <Typography sx={whiteText}>
-            {card.location.name}
-          </Typography>
-        </Box>
-
-        <Box>
-          <Typography sx={{
-            ...greyText,
-            color: '#9E9E9E',
-          }}>
-            First seen in:
-          </Typography>
-
-          <Typography sx={whiteText}>
-            {card.episode[0].name}
-          </Typography>
-        </Box>
+        <Typography sx={whiteText}>
+          {card.episode[0].name}
+        </Typography>
+      </Box>
     </Box>
   )
 };

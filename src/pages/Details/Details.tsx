@@ -3,6 +3,7 @@ import { Box, Icon, Typography } from '@mui/material';
 import { /* useAppDispatch, */ useAppSelector } from '../../app/hooks';
 import { useParams } from 'react-router-dom';
 import CharacterDescription, { greyText, whiteText } from '../../components/CharacterDescription/CharacterDescription';
+import FabComponent from '../../components/Fab/FabComponent';
 
 const Details = () => {
   const characters = useAppSelector(state => state.characters);
@@ -30,14 +31,16 @@ const Details = () => {
 
       <Box component="article" sx={{
         display: 'flex',
+        position: 'relative'
       }}>
         <Icon sx={{
           width: '100%',
-          height: '100%',
+          height: 'auto',
           objectFit: 'cover',
           maxWidth: '595px',
           maxHeight: '572px',
           flexGrow: '1',
+          flexShrink: '1',
           borderRadius: '9px 0px 0px 9px',
           '& > img': {
             width: '100%',
@@ -69,6 +72,15 @@ const Details = () => {
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate amet voluptatibus accusamus ipsa nihil veniam esse, magni vero modi labore ipsam laborum totam officia dolores qui tempora harum incidunt reiciendis?
             </Typography>
           </Box>
+        </Box>
+
+        <Box sx={{
+          position: 'absolute',
+          bottom: '0',
+          right: '0',
+          transform: 'translateY(25%)'
+        }}>
+          <FabComponent disabled={true} />
         </Box>
       </Box>
     </Box>

@@ -11,12 +11,11 @@ export const charactersSlice = createSlice({
     add: (characters, action: PayloadAction<Character[]>) => {
       characters.concat(action.payload);
     },
-    // find: (characters, action: PayloadAction<number>) => {
-    //   characters.find(char => char.id === action.payload);
-    // }
   },
   extraReducers: (builder) => {
     builder.addCase(loadCharacters.fulfilled, (state, action) => {
+      console.log(action.payload);
+      
       return state.concat(action.payload.characters.results)
     })
   },
@@ -24,22 +23,24 @@ export const charactersSlice = createSlice({
 
 export const {
   add,
-  // find,
 } = charactersSlice.actions;
 
 export default charactersSlice.reducer;
 
 type FilterCharacter = {
-  name: string
-  status: string
-  species: string
-  type: string
-  gender: string
+  name: string,
+  status: string,
+  species: string,
+  type: string,
+  gender: string,
+  dimension: string,
+  episodes: string,
 }
 
 type queryArgument = {
   page?: number
   filter?: FilterCharacter
+  filterBy?: string[]
 }
 
 type ReturnCharacters = {
@@ -52,10 +53,42 @@ type ReturnCharacters = {
 //   character: Character
 // }
 
-const loadItems = ({ page, filter }: queryArgument): Promise<ReturnCharacters> => {
+const loadItems = ({ page, filter, filterBy }: queryArgument): Promise<ReturnCharacters> => {
+
+  const episodes = filterBy?.includes('Episodes');
+  const location = filterBy?.includes('Location');
+  const characters = filterBy?.includes('Character');
+
+  const characterFilter = {
+    name: filter?.name,
+    status: filter?.status,
+    species: filter?.species,
+    type: filter?.type,
+    gender: filter?.gender,
+  };
+
+  const episodeFilter = {
+    name: filter?.name,
+    episode: filter?.episodes,
+  };
+
+  const locationFilter = {
+    name: filter?.name,
+    type: filter?.type,
+    dimension: filter?.dimension,
+  };
+
   return request('https://rickandmortyapi.com/graphql', gql`
-    query getCharacters($page: Int = 1, $filter: FilterCharacter) {
-      characters(page: $page, filter: $filter) {
+    query getCharacters(
+        $page: Int = 1,
+        $episodes: Boolean = false,
+        $location: Boolean = false,
+        $characters: Boolean = true,
+        $characterFilter: FilterCharacter,
+        $episodeFilter: FilterEpisode,
+        $locationFilter: FilterLocation,
+      ) {
+    characters(page: $page, filter: $characterFilter) @include(if:$characters) {
         info {
           count
           next
@@ -77,11 +110,41 @@ const loadItems = ({ page, filter }: queryArgument): Promise<ReturnCharacters> =
           }
         }
       }
+      episodes(page: $page, filter: $episodeFilter) @include(if: $episodes) {
+        info {
+          count
+          next
+          prev
+        }
+        results {
+          id
+          name
+          air_date
+        }
+      }
+      locations(page: $page, filter: $locationFilter) @include(if: $location) {
+        info {
+          count
+          next
+          prev
+        }
+        results {
+          id
+          name
+          type
+          dimension
+        }
+      }
     }
   `,
     {
     page,
-    filter,
+    characterFilter,
+    episodeFilter,
+    locationFilter,
+    episodes,
+    location,
+    characters
   })
 }
 
@@ -109,9 +172,18 @@ const loadItems = ({ page, filter }: queryArgument): Promise<ReturnCharacters> =
 //   })
 // }
 
-export const loadCharacters = createAsyncThunk('characters/fetch', ({ page, filter }: queryArgument) => {
-  return loadItems({ page, filter })
+// type FilterQuery = {
+//   page?: number,
+//   filterBy: string[]
+// }
+
+export const loadCharacters = createAsyncThunk('characters/fetch', ({ page, filter, filterBy }: queryArgument) => {
+  return loadItems({ page, filter, filterBy })
 });
+
+// export const loadApiItems = createAsyncThunk('characters/fetchData', ({
+//   page, filterBy
+// }))
 
 // export const loadCharById = createAsyncThunk('characters/fetchById', (id: number) => {
 //   return loadChar(id)

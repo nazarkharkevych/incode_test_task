@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Box, Icon, Typography } from '@mui/material';
 import { /* useAppDispatch, */ useAppSelector } from '../../app/hooks';
 import { useParams } from 'react-router-dom';
-import CharacterDescription, { greyText, whiteText } from '../../components/CharacterDescription/CharacterDescription';
+import CharacterDescription from '../../components/CharacterDescription/CharacterDescription';
 import FabComponent from '../../components/Fab/FabComponent';
+import { itemCard } from '../../styles/styles';
 
 const Details = () => {
-  const characters = useAppSelector(state => state.characters);
+  const characters = useAppSelector(state => state.store.characters);
   // const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -21,6 +22,9 @@ const Details = () => {
   }, [id, characters]);
 
   console.log(characters, selectedChar, id);
+
+  const greyText = itemCard.text.grey;
+  const whiteText = itemCard.text.white;
 
   return (
     <Box component="section" sx={{
@@ -56,7 +60,7 @@ const Details = () => {
           width: '100%'
         }}>
           {selectedChar && (
-            <CharacterDescription margin="0px 0px 33px 0px" card={selectedChar} />
+            <CharacterDescription withStatus={true} margin="0px 0px 33px 0px" character={selectedChar} />
           )}
 
           <Box>

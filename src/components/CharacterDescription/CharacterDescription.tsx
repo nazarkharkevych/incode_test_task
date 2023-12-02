@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Typography, Box } from '@mui/material';
-import { Character } from '../Card/Card';
+import { Character } from '../CharacterCard/CharacterCard';
+import { itemCard } from '../../styles/styles';
+import { Episode } from '../../features/characters/charactersSlice';
 
 const statusColor: {
   [key: string]: string
@@ -10,87 +12,70 @@ const statusColor: {
   Dead :'#D63D2E',
 }
 
-export const whiteText = {
-  color: '#F5F5F5',
-  fontSize: '18px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: '162.5%',
-};
-
-export const greyText = {
-  fontSize: '16px',
-  fontStyle: 'normal',
-  fontWeight: 500,
-  lineHeight: '162.5%',
-};
+const whiteText = itemCard.text.white;
+const greyText = itemCard.text.grey;
 
 type Props = {
   margin?: string,
-  card: Character,
+  character?: Character,
+  episode?: Episode,
+  withStatus: boolean,
 }
 
-const CharacterDescription = ({ card, margin }: Props) => {
+const CharacterDescription = ({ character: card, margin, withStatus }: Props) => {
   return (
     <Box sx={{
       margin,
     }}>
-      <Typography variant="h2" sx={{
-        color: '#F5F5F5',
-        fontSize: '27px',
-        fontStyle: 'normal',
-        fontWeight: 800,
-        lineHeight: '110%',
-      }}>
-        {card.name}
+      <Typography variant="h2" sx={itemCard.text.h2}>
+        {card?.name}
       </Typography>
 
-      <Typography sx={{
-        ...greyText,
-        color: '#FFF',
-        marginBottom: '12.5px',
-        '&::before': {
-          content: '""',
-          display: 'block',
-          marginRight: '7px',
-          marginTop: '10px',
-          width: '9px',
-          height: '9px',
-          borderRadius: '4.5px',
-          backgroundColor: `${statusColor[card.status]}`,
-          float: 'left',
-        }
-      }}>
-        {`${card.status} - ${card.species}`}
-      </Typography>
+      {withStatus && (
+        <Typography sx={{
+          ...greyText,
+          color: '#FFF',
+          marginBottom: '12.5px',
+          '&::before': {
+            content: '""',
+            display: 'block',
+            marginRight: '7px',
+            marginTop: '10px',
+            width: '9px',
+            height: '9px',
+            borderRadius: '4.5px',
+            backgroundColor: `${statusColor[card?.status || 'unknown']}`,
+            float: 'left',
+          }
+        }}>
+          {`${card?.status} - ${card?.species}`}
+        </Typography>
+      )}
 
       <Box sx={{
         marginBottom: '13.5px',
       }}>
         <Typography sx={{
-          color: '#9E9E9E',
+          ...greyText,
           fontSize: '15px',
-          fontStyle: 'normal',
-          fontWeight: 500,
           lineHeight: '173.333%',
         }}>
           Last known location:
         </Typography>
         <Typography sx={whiteText}>
-          {card.location.name}
+          {card?.location.name}
         </Typography>
       </Box>
 
       <Box>
         <Typography sx={{
           ...greyText,
-          color: '#9E9E9E',
         }}>
           First seen in:
         </Typography>
 
         <Typography sx={whiteText}>
-          {card.episode[0].name}
+          {card?.episode[0].name}
         </Typography>
       </Box>
     </Box>

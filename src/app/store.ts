@@ -4,7 +4,7 @@ import charactersReducer from '../features/characters/charactersSlice';
 
 export const store = configureStore({
   reducer: {
-    characters: charactersReducer,
+    store: charactersReducer,
     // [apiSlice.reducerPath]: apiSlice.reducer,
   },
   // middleware: (getDefaultMiddleware) =>

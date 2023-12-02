@@ -1,54 +1,35 @@
 import * as React from 'react';
 import { Box, Button, FormControl, Select, MenuItem, Stack, ListItemText, Checkbox, TextField, Menu, Backdrop } from '@mui/material';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useAppDispatch } from '../../app/hooks';
-import { loadCharacters } from '../../features/characters/charactersSlice';
+import { useFormikContext } from 'formik';
+import { InitialValues } from '../../pages/Main/Main';
 
 const selectValues = ['Character', 'Location', 'Episodes'];
 
-const validationSchema = yup.object({
-  filterBy: yup
-    .array()
-    .of(yup.string())
-    .min(1, 'Select item to search!'),
-});
-
-type InitialValues = {
-  filterBy: string[],
-  name: string,
-  status: string,
-  species: string,
-  type: string,
-  gender: string,
-  dimension: string,
-  episodes: string,
-}
-
 const FilterBar = () => {
-  const dispatch = useAppDispatch();
+  const formik = useFormikContext<InitialValues>();
 
-  const formik = useFormik({
-    initialValues: {
-      filterBy: [],
-      name: '',
-      status: '',
-      species: '',
-      type: '',
-      gender: '',
-      dimension: '',
-      episodes: '',
-    } as InitialValues,
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+  // const formik = useFormik({
+  //   initialValues: {
+  //     filterBy: [],
+  //     name: '',
+  //     status: '',
+  //     species: '',
+  //     type: '',
+  //     gender: '',
+  //     dimension: '',
+  //     episodes: '',
+  //   } as InitialValues,
+  //   validationSchema: validationSchema,
+  //   onSubmit: (values) => {
+  //     console.log(values);
 
-      const { filterBy, ...filter } = values;
+  //     const { filterBy, ...filter } = values;
       
-      // alert(JSON.stringify(values, null, 2));
-      dispatch(loadCharacters({page: 1, filter, filterBy}))
-    },
-  });
+  //     // alert(JSON.stringify(values, null, 2));
+  //     setCurrentPage(1);
+  //     dispatch(loadCharacters({page: 1, filter, filterBy}))
+  //   },
+  // });
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

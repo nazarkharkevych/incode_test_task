@@ -1,29 +1,57 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Character } from '../../components/Card/Card';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Character } from '../../components/CharacterCard/CharacterCard';
 import request, { gql } from 'graphql-request';
 
-const initialState: Character[] = [];
+type InitialState = {
+  characters: Character[],
+  episodes: Episode[],
+  locations: Location[],
+  totalCount: number,
+}
+
+const initialState = {
+  characters: [],
+  episodes: [],
+  locations: [],
+  totalCount: 0,
+} as InitialState;
 
 export const charactersSlice = createSlice({
-  name: 'characters',
-  initialState,
+  name: 'store',
+  initialState: initialState,
   reducers: {
-    add: (characters, action: PayloadAction<Character[]>) => {
-      characters.concat(action.payload);
-    },
   },
   extraReducers: (builder) => {
+    builder.addCase(loadCharacters.pending, (state) => {
+      state.totalCount = 0;
+    }),
     builder.addCase(loadCharacters.fulfilled, (state, action) => {
       console.log(action.payload);
-      
-      return state.concat(action.payload.characters.results)
+      const { characters, locations, episodes } = action.payload;
+
+      if (characters) {
+        state.characters = characters.results;
+        state.totalCount += characters.info.count || 0;
+      } else {
+        state.characters = [];
+      }
+
+      if (locations) {
+        state.locations = locations.results;
+        state.totalCount += locations.info.count || 0;
+      } else {
+        state.locations = [];
+      }
+
+      if (episodes) {
+        state.episodes = episodes.results;
+        state.totalCount += episodes.info.count || 0;
+      } else {
+        state.episodes = [];
+      }
     })
   },
 });
-
-export const {
-  add,
-} = charactersSlice.actions;
 
 export default charactersSlice.reducer;
 
@@ -37,24 +65,49 @@ type FilterCharacter = {
   episodes: string,
 }
 
-type queryArgument = {
+type QueryArgument = {
   page?: number
   filter?: FilterCharacter
   filterBy?: string[]
 }
 
+export interface Location {
+  id: string
+  name: string
+  type: string
+  dimension: string
+}
+
+export interface Episode {
+  id: string
+  name: string
+  air_date: string
+  episode: string
+}
+
 type ReturnCharacters = {
-  characters: {
+  characters?: {
     results: Character[],
+  } & Info;
+  locations?: {
+    results: Location[],
+  } & Info;
+  episodes?: {
+    results: Episode[],
+  } & Info;
+}
+
+type Info = {
+  info: {
+    count: number | null,
+    next: number | null,
+    prev: number | null
   }
 }
 
-// type ReturnCharacterById = {
-//   character: Character
-// }
+type LoadItems = (query: QueryArgument) => Promise<ReturnCharacters>;
 
-const loadItems = ({ page, filter, filterBy }: queryArgument): Promise<ReturnCharacters> => {
-
+const loadItems: LoadItems = ({ page, filter, filterBy }) => {
   const episodes = filterBy?.includes('Episodes');
   const location = filterBy?.includes('Location');
   const characters = filterBy?.includes('Character');
@@ -120,6 +173,7 @@ const loadItems = ({ page, filter, filterBy }: queryArgument): Promise<ReturnCha
           id
           name
           air_date
+          episode
         }
       }
       locations(page: $page, filter: $locationFilter) @include(if: $location) {
@@ -148,43 +202,11 @@ const loadItems = ({ page, filter, filterBy }: queryArgument): Promise<ReturnCha
   })
 }
 
-// const loadChar = (id: number): Promise<ReturnCharacterById> => {
-//   return request('https://rickandmortyapi.com/graphql', gql`
-//   query getCharById($id: Int = 1) {
-//     character(id: $id) {
-//       name
-//       status
-//       species
-//       image
-//       location {
-//         id
-//         name
-//       }
-//       episode {
-//         id
-//         name
-//       }
-//     }
-//   }
-//   `,
-//     {
-//     id,
-//   })
-// }
+const thunkCallback = ({ page, filter, filterBy }: QueryArgument) => {
+  return loadItems({ page, filter, filterBy });
+}
 
-// type FilterQuery = {
-//   page?: number,
-//   filterBy: string[]
-// }
-
-export const loadCharacters = createAsyncThunk('characters/fetch', ({ page, filter, filterBy }: queryArgument) => {
-  return loadItems({ page, filter, filterBy })
-});
-
-// export const loadApiItems = createAsyncThunk('characters/fetchData', ({
-//   page, filterBy
-// }))
-
-// export const loadCharById = createAsyncThunk('characters/fetchById', (id: number) => {
-//   return loadChar(id)
-// });
+export const loadCharacters = createAsyncThunk(
+  'characters/fetch',
+  thunkCallback,
+);

@@ -26,6 +26,10 @@ npm run build-dev
 
 Open the file `dist/index.html` in your browser
 
+## Deployed app
+
+https://nazarkharkevych.github.io/incode_test_task
+
 ## Credits
 
 Made with [createapp.dev](https://createapp.dev/)

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Typography, Box } from '@mui/material';
 import { Character } from '../CharacterCard/CharacterCard';
-import { itemCard } from '../../styles/styles';
-import { Episode } from '../../features/characters/charactersSlice';
+import { itemCard } from '@/styles/styles';
 
 const statusColor: {
   [key: string]: string
@@ -18,11 +17,9 @@ const greyText = itemCard.text.grey;
 type Props = {
   margin?: string,
   character?: Character,
-  episode?: Episode,
-  withStatus: boolean,
 }
 
-const CharacterDescription = ({ character: card, margin, withStatus }: Props) => {
+const CharacterDescription = ({ character: card, margin }: Props) => {
   return (
     <Box sx={{
       margin,
@@ -31,26 +28,24 @@ const CharacterDescription = ({ character: card, margin, withStatus }: Props) =>
         {card?.name}
       </Typography>
 
-      {withStatus && (
-        <Typography sx={{
-          ...greyText,
-          color: '#FFF',
-          marginBottom: '12.5px',
-          '&::before': {
-            content: '""',
-            display: 'block',
-            marginRight: '7px',
-            marginTop: '10px',
-            width: '9px',
-            height: '9px',
-            borderRadius: '4.5px',
-            backgroundColor: `${statusColor[card?.status || 'unknown']}`,
-            float: 'left',
-          }
-        }}>
-          {`${card?.status} - ${card?.species}`}
-        </Typography>
-      )}
+      <Typography sx={{
+        ...greyText,
+        color: '#FFF',
+        marginBottom: '12.5px',
+        '&::before': {
+          content: '""',
+          display: 'block',
+          marginRight: '7px',
+          marginTop: '10px',
+          width: '9px',
+          height: '9px',
+          borderRadius: '4.5px',
+          backgroundColor: `${statusColor[card?.status || 'unknown']}`,
+          float: 'left',
+        }
+      }}>
+        {`${card?.status} - ${card?.species}`}
+      </Typography>
 
       <Box sx={{
         marginBottom: '13.5px',

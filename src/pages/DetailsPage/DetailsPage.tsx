@@ -1,19 +1,13 @@
 import * as React from 'react';
 import { Box, Icon, Typography } from '@mui/material';
-import { /* useAppDispatch, */ useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '@/redux/app/hooks';
 import { useParams } from 'react-router-dom';
-import CharacterDescription from '../../components/CharacterDescription/CharacterDescription';
-import FabComponent from '../../components/Fab/FabComponent';
-import { itemCard } from '../../styles/styles';
+import CharacterDescription from '@/components/CharacterDescription/CharacterDescription';
+import FabComponent from '@/components/Fab/FabComponent';
+import { itemCard } from '@/styles/styles';
 
-const Details = () => {
+const DetailsPage = () => {
   const characters = useAppSelector(state => state.store.characters);
-  // const dispatch = useAppDispatch();
-
-  React.useEffect(() => {
-    // if (!characters.length) {
-    // }
-  }, []);
 
   const { id = "" } = useParams();
 
@@ -60,7 +54,7 @@ const Details = () => {
           width: '100%'
         }}>
           {selectedChar && (
-            <CharacterDescription withStatus={true} margin="0px 0px 33px 0px" character={selectedChar} />
+            <CharacterDescription margin="0px 0px 33px 0px" character={selectedChar} />
           )}
 
           <Box>
@@ -91,4 +85,4 @@ const Details = () => {
   )
 };
 
-export default Details;
+export default DetailsPage;

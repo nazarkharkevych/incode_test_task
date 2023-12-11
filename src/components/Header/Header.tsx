@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { AppBar, Box, Icon, Typography } from '@mui/material';
-import Logo from '../../images/Vector.svg';
+import Logo from '@/images/Vector.svg';
 
 const Header = () => {
   return (

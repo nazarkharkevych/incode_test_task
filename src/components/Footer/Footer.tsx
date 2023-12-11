@@ -1,10 +1,10 @@
 import { Link, Box, Icon, Typography } from '@mui/material';
 import * as React from 'react';
-import FooterLogo from '../../images/footerImg.png';
-import Ellipse from '../../images/Ellipse.svg';
-import Github from '../../images/github.svg';
-import Twitter from '../../images/twitter.svg';
-import Heart from '../../images/heart.svg';
+import FooterLogo from '@/images/footerImg.png';
+import Ellipse from '@/images/Ellipse.svg';
+import Github from '@/images/github.svg';
+import Twitter from '@/images/twitter.svg';
+import Heart from '@/images/heart.svg';
 
 export const Footer = () => {
   return (

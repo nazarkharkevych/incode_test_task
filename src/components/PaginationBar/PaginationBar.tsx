@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { Pagination, PaginationItem } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { loadCharacters } from '../../features/characters/charactersSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/app/hooks';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useFormikContext } from 'formik';
-import { InitialValues, itemsPerPage } from '../../pages/Main/Main';
+import { InitialValues, itemsPerPage } from '@/pages/MainPage/MainPage';
+import loadAndFilterCharacters from '@/redux/actions/loadAndFilterCharacters';
 
 const shevronStyles = {
   width: '24px',
   height: '24px',
   color: '#272B33',
 }
-
-const filterByCharacters = ['Character'];
 
 type Props = {
   setCurrentPage: (page: number) => void;
@@ -25,18 +23,17 @@ const PaginationBar = ({ setCurrentPage, currentPage }: Props) => {
   const maxPagesCount = React.useMemo(() => {
     return Math.ceil(totalItemsCount / itemsPerPage);
   }, [totalItemsCount, itemsPerPage]);
+
   const dispatch = useAppDispatch();
+  const { values } = useFormikContext<InitialValues>();
 
-  const { values: { filterBy, ...filter } } = useFormikContext<InitialValues>();
+  const handleChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    console.log(values);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    console.log(filter, filterBy);
-
-    setCurrentPage(value);
-    dispatch(loadCharacters({
-      page: value,
-      filter,
-      filterBy: filterBy.length ? filterBy : filterByCharacters,
+    setCurrentPage(page);
+    dispatch(loadAndFilterCharacters({
+      page,
+      formValues: values,
     }));
   };
 

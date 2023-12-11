@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { store } from './app/store'
+import { store } from './redux/app/store'
 import { Provider } from 'react-redux'
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';

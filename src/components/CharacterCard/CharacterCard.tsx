@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Box, Icon } from '@mui/material';
-import { itemCard } from '../../styles/styles';
-import NoImage from '../../images/no-image.png';
-import { Episode } from '../../features/characters/charactersSlice';
+import { itemCard } from '@/styles/styles';
+import NoImage from '@/images/no-image.png';
+import CharacterDescription from '../CharacterDescription/CharacterDescription';
 
 export interface Character {
   id: string,
@@ -11,21 +11,23 @@ export interface Character {
   species: string,
   image: string,
   location: {
-      id: number,
+      id: number | null,
       name: string,
+      type: string | null,
+      dimension: string | null,
   },
   episode: {
     id: string,
-    name: string
+    name: string,
+    episode: string,
   }[],
 }
 
 type Props = {
-  card: Character | Episode,
-  children: React.ReactNode
+  card: Character,
 }
 
-const CharacterCard = ({ card, children }: Props) => {
+const CharacterCard = ({ card }: Props) => {
   return (
     <Box component="article" sx={itemCard.article}>
       <Icon sx={{
@@ -40,7 +42,7 @@ const CharacterCard = ({ card, children }: Props) => {
       </Icon>
 
       <Box sx={itemCard.content}>
-        {children}
+        <CharacterDescription character={card} />
       </Box>
     </Box>
   )

@@ -54,7 +54,10 @@ const config = {
       '.tsx',
       '.ts',
       '.js'
-    ]
+    ],
+    alias: {
+      '@': path.resolve(process.cwd(), './src')
+    }
   }
 };
 
